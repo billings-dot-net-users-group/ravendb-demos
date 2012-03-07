@@ -1,30 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Raven.Client;
 using Raven.Client.Document;
 
 namespace _01___Hello_World
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            using (var documentStore = new DocumentStore { Url = "http://localhost:8080" }.Initialize())
+            using (IDocumentStore documentStore = new DocumentStore {Url = "http://localhost:8080"}.Initialize())
             {
-                using (var session = documentStore.OpenSession())
+                // Anonymous types + dynamics
+                using (IDocumentSession session = documentStore.OpenSession())
                 {
-                    session.Store(new { Id = "demo/1", Text = "Hello, World!" });
+                    session.Store(new {Id = "demo/1", Text = "Hello, World!"});
                     session.SaveChanges();
                 }
 
-                using (var session = documentStore.OpenSession())
+                using (IDocumentSession session = documentStore.OpenSession())
                 {
-                    dynamic hello = session.Load<dynamic>("demo/1");
+                    var hello = session.Load<dynamic>("demo/1");
+                        // RavenDB guarantees that once a document has been written it can be loaded
+                    Console.WriteLine("RavenDB says " + hello.Text);
+                }
+
+                // POCOs
+                string helloId;
+                using (IDocumentSession session = documentStore.OpenSession())
+                {
+                    var hello = new HelloWorld {Text = "Statics work, too!"};
+                    session.Store(hello);
+                    helloId = hello.Id;
+                    session.SaveChanges();
+                }
+
+                using (IDocumentSession session = documentStore.OpenSession())
+                {
+                    var hello = session.Load<HelloWorld>(helloId);
                     Console.WriteLine(hello.Text);
                 }
             }
+
+            Console.ReadLine();
         }
+    }
+
+    internal class HelloWorld
+    {
+        public string Id { get; set; }
+        public string Text { get; set; }
     }
 }
