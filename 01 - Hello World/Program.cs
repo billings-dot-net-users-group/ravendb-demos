@@ -1,5 +1,4 @@
 ﻿using System;
-using Raven.Client;
 using Raven.Client.Document;
 
 namespace _01___Hello_World
@@ -8,33 +7,33 @@ namespace _01___Hello_World
     {
         private static void Main(string[] args)
         {
-            using (IDocumentStore documentStore = new DocumentStore {Url = "http://localhost:8080"}.Initialize())
+            using (var documentStore = new DocumentStore {Url = "http://localhost:8080"}.Initialize())
             {
                 // Anonymous types + dynamics
-                using (IDocumentSession session = documentStore.OpenSession())
+                using (var session = documentStore.OpenSession())
                 {
                     session.Store(new {Id = "demo/1", Text = "Hello, World!"});
                     session.SaveChanges();
                 }
 
-                using (IDocumentSession session = documentStore.OpenSession())
+                using (var session = documentStore.OpenSession())
                 {
                     var hello = session.Load<dynamic>("demo/1");
-                        // RavenDB guarantees that once a document has been written it can be loaded
+                    // RavenDB guarantees that once a document has been written it can be loaded
                     Console.WriteLine("RavenDB says " + hello.Text);
                 }
 
                 // POCOs
                 string helloId;
-                using (IDocumentSession session = documentStore.OpenSession())
+                using (var session = documentStore.OpenSession())
                 {
                     var hello = new HelloWorld {Text = "Statics work, too!"};
-                    session.Store(hello);
+                    session.Store(hello);   // The client generates an ID on Store without needing to go to the server!
                     helloId = hello.Id;
                     session.SaveChanges();
                 }
 
-                using (IDocumentSession session = documentStore.OpenSession())
+                using (var session = documentStore.OpenSession())
                 {
                     var hello = session.Load<HelloWorld>(helloId);
                     Console.WriteLine(hello.Text);
