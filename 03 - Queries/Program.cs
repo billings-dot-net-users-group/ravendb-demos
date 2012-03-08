@@ -65,9 +65,7 @@ namespace _03___Queries
                     // Map-reduce for doing aggregate queries
                     var tags = session.Query<Tags_Count.ReduceResult, Tags_Count>();
                     foreach (var tag in tags)
-                    {
                         Console.WriteLine("{0} - {1}", tag.Tag, tag.Count);
-                    }
                 }
 
                 Console.ReadLine();

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<_04___Full_Text_Querying.Models.Post>
+           
+
+<div class="row">
+    <div class="span8 offset2">
+        <div class="row">
+            <div class="span8">
+                @using (Html.BeginForm("FullText", "Search", FormMethod.Get)) {
+                    @Html.TextBox("q", (object)ViewBag.Query, new { placeholder = "Search", @class="span8" })
+                }
+            </div>
+        </div>
+        @foreach(var post in Model) {
+            <div class="row">
+                <div class="span8">
+                    <a href="http://stackoverflow.com/questions/@post.Id">@post.Title</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

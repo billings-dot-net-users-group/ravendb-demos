@@ -7,10 +7,11 @@ namespace _01___Hello_World
     {
         private static void Main(string[] args)
         {
+            // Initializing the document store is expensive - do it once!
             using (var documentStore = new DocumentStore {Url = "http://localhost:8080"}.Initialize())
             {
                 // Anonymous types + dynamics
-                using (var session = documentStore.OpenSession())
+                using (var session = documentStore.OpenSession())   // sessions are cheap!
                 {
                     session.Store(new {Id = "demo/1", Text = "Hello, World!"});
                     session.SaveChanges();
@@ -27,7 +28,7 @@ namespace _01___Hello_World
                 string helloId;
                 using (var session = documentStore.OpenSession())
                 {
-                    var hello = new HelloWorld {Text = "Statics work, too!"};
+                    var hello = new HelloWorld {Text = "Statics work, too!"};   // The ID is generated for you!
                     session.Store(hello);   // The client generates an ID on Store without needing to go to the server!
                     helloId = hello.Id;
                     session.SaveChanges();
