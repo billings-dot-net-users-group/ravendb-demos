@@ -11,6 +11,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using FileHelpers;
 using Raven.Client;
+using Raven.Client.Document;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
 using _04___Full_Text_Querying.Models;
@@ -50,11 +51,19 @@ namespace _04___Full_Text_Querying
             builder.RegisterModule<AutofacWebTypesModule>();
             builder.RegisterFilterProvider();
             builder.RegisterModelBinderProvider();
-            builder.Register(c => new EmbeddableDocumentStore
+            builder.Register(c =>
+            {
+                var documentStore = new EmbeddableDocumentStore
                 {
-                RunInMemory = true, 
-                UseEmbeddedHttpServer = true    // Surely you jest? Nope! http://localhost:8080
-            }.Initialize()).As<IDocumentStore>().SingleInstance();
+                    RunInMemory = true,
+                    UseEmbeddedHttpServer = true // Surely you jest? Nope! http://localhost:8080
+                }.Initialize();
+
+                IndexCreation.CreateIndexes(Assembly.GetExecutingAssembly(), documentStore);
+                Raven.Client.MvcIntegration.RavenProfiler.InitializeFor(documentStore);
+
+                return documentStore;
+            }).As<IDocumentStore>().SingleInstance();
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(builder.Build()));
@@ -134,7 +143,6 @@ namespace _04___Full_Text_Querying
             var posts = data.Select(d => d.ToPost()).ToArray();
 
             var documentStore = DependencyResolver.Current.GetService<IDocumentStore>();
-            IndexCreation.CreateIndexes(Assembly.GetExecutingAssembly(), documentStore);
             using (var session = documentStore.OpenSession())
             {
                 foreach (var post in posts)

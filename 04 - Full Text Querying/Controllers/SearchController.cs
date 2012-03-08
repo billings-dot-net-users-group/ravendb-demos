@@ -17,6 +17,9 @@ namespace _04___Full_Text_Querying.Controllers
 
         public ActionResult FullText(string q)
         {
+            if (string.IsNullOrEmpty(q))
+                return View(Enumerable.Empty<Post>());
+
             ViewBag.Query = q;
             using (var session = DocumentStore.OpenSession())
             {

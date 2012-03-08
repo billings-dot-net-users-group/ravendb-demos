@@ -55,9 +55,6 @@
     <Reference Include="FileHelpers">
       <HintPath>..\packages\FileHelpers.2.0.0.0\lib\FileHelpers.dll</HintPath>
     </Reference>
-    <Reference Include="FileHelpers.ExcelStorage">
-      <HintPath>..\packages\FileHelpers.2.0.0.0\lib\FileHelpers.ExcelStorage.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\RavenDB-Embedded.1.0.701\lib\net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>

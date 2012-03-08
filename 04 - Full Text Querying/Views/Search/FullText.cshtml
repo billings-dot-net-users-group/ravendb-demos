@@ -11,9 +11,16 @@
             </div>
         </div>
         @foreach(var post in Model) {
-            <div class="row">
+            <div class="row post">
                 <div class="span8">
-                    <a href="http://stackoverflow.com/questions/@post.Id">@post.Title</a>
+                    <h3><a href="http://stackoverflow.com/questions/@post.Id">@post.Title</a></h3>
+                </div>
+                <div class="span8">
+                    @foreach(var tag in post.Tags) {
+                        <span class="label label-info">
+                            <a href="http://stackoverflow.com/questions/tagged/@tag">@tag</a> 
+                        </span>
+                    }
                 </div>
             </div>
         }
