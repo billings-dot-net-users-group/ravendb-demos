@@ -30,6 +30,16 @@ namespace _04___Full_Text_Querying
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "Tagged",
+                "tagged/{tag}",
+                new { controller = "Tags", action = "Tagged" });
+
+            routes.MapRoute(
+                "Tags",
+                "tags",
+                new { controller = "Tags", action = "Tags" });
+
+            routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Search", action = "FullText", id = UrlParameter.Optional } // Parameter defaults

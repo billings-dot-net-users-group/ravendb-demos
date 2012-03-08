@@ -8,13 +8,25 @@ using _04___Full_Text_Querying.Models;
 
 namespace _04___Full_Text_Querying.Controllers
 {
-    public class TopController : Controller
+    public class TagsController : Controller
     {
         public IDocumentStore DocumentStore { get; set; }
 
-        public TopController(IDocumentStore documentStore)
+        public TagsController(IDocumentStore documentStore)
         {
             DocumentStore = documentStore;
+        }
+
+        public ActionResult Tagged(string tag)
+        {
+            ViewBag.Tag = tag;
+            using (var session = DocumentStore.OpenSession())
+            {
+                return View(session
+                    .Query<Post>()
+                    .Where(p => p.Tags.Any(t => t == tag))  // No index?! Look again!
+                    .ToList());
+            }
         }
 
         public ActionResult Tags()
@@ -45,8 +57,8 @@ namespace _04___Full_Text_Querying.Controllers
 
             Reduce = results => from r in results
                                 group r by r.Tag
-                                into g
-                                select new { Tag = g.Key, Count = g.Sum(x => x.Count) };
+                                    into g
+                                    select new { Tag = g.Key, Count = g.Sum(x => x.Count) };
 
             Sort(x => x.Count, SortOptions.Short);
         }
