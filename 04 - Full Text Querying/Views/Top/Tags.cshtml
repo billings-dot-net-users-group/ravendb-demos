@@ -1,0 +1,15 @@
+﻿@model IEnumerable<_04___Full_Text_Querying.Controllers.Posts_ByTag.ReduceResult>
+           
+
+<div class="row">
+    <div class="span8 offset2">
+        @foreach (var tag in Model)
+        {
+            <div class="row">
+                <div class="span8">
+                    @tag.Count <a href="http://stackoverflow.com/questions/tagged/@tag.Tag">@tag.Tag</a> 
+                </div>
+            </div>
+        }
+    </div>
+</div>

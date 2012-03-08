@@ -33,28 +33,4 @@ namespace _04___Full_Text_Querying.Models
 
         public int? FavoriteCount { get; set; }
     }
-
-    public class Posts_Search : AbstractIndexCreationTask<Post, Posts_Search.ReduceResult>
-    {
-        public class ReduceResult
-        {
-            public string Query { get; set; }
-        }
-
-        public Posts_Search()
-        {
-            Map = posts => from post in posts
-                           select new
-                           {
-                               Query = new object[]
-                               {
-                                   post.Title,
-                                   post.Body,
-                                   post.Tags
-                               }
-                           };
-
-            Indexes.Add(x => x.Query, FieldIndexing.Analyzed);
-        }
-    }
 }
