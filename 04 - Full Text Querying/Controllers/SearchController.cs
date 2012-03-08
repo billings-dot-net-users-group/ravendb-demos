@@ -57,6 +57,7 @@ namespace _04___Full_Text_Querying.Controllers
                                }
                            };
 
+            // Say hello to full-text search!
             Indexes.Add(x => x.Query, FieldIndexing.Analyzed);
         }
     }
